@@ -1,0 +1,43 @@
+Bugs:
+  Ship can fly reverse inside another object(and also in high speeds it goes through other objects)
+
+  DONE Destroyed ship doesn't end the game
+
+  DONE Enemy isn't destroyed
+
+  Enemies move in a circular motion when player moves in a similar motion
+
+
+Features:
+  Partial collisions with objects, meaning that crashing to the corner of another object makes object bit slower and turns it (surplus.py has some code for it)
+
+  Weapons:
+    Guided missiles
+    Machinegun
+    Spray-gun
+
+  Enemy ships, infantry, armours, more AA
+
+  Terrain
+
+  Random levels
+
+  UI
+
+  LOS
+
+Bad code:
+  DONE Loading the images used in game should be implemented by loading all images from a certain directory
+
+  DONE Whole object-hierarchy should be remade( as in object->component->building->groundbattery )
+
+  Proper collision detection
+
+Short-timespan plan:
+  Spray-gun
+  Guided missiles
+  Enemy vessels
+  Random levels
+  Enemy circle-motion bug
+  Proper collision-detection engine
+  Reverse flight bug

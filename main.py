@@ -1076,11 +1076,6 @@ while 1:
         shot = ship.weapons[1].shoot(ship)
         if shot:
           allshots.add(shot)
-    if pressed[K_k] == 1:
-      if ship.weapons[2].shot_delay == 0:
-        shot = ship.weapons[2].shoot(ship)
-        if shot:
-          allshots.add(shot)
 
     if pressed[K_q] == 1:
       ship.hit_points = 1

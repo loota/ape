@@ -12,6 +12,7 @@ Tested with python 2.6.7
 
 Controls
 ========
+<pre>
 a - turn left
 d - turn right
 w - increase speed
@@ -19,3 +20,4 @@ s - decrease speed
 
 h - shoot rocket (ammunition: 200)
 j - launch a bomb (ammunition: 4)
+</pre>

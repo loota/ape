@@ -3,7 +3,7 @@ import random
 import media
 import pygame
 import global_state
-# TODO make other classes derive from body and eleccomp
+
 class Body(pygame.sprite.Sprite):
   def __init__(self, x = 0, y = 0, direction = 0, center = 0, velocity = 0):
     self.x = x
@@ -68,7 +68,7 @@ class CrossHairs(pygame.sprite.Sprite):
 class Building(Machine):
     def __init__(self, x, y, hit_points):
       Machine.__init__(self, x, y, 0, 0, 0)
-      pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+      pygame.sprite.Sprite.__init__(self)
 
       self.image, self.rect = media.load_image('ground-battery.bmp', -1)
 
@@ -149,7 +149,7 @@ class GroundBattery(Building):
 class Rocket(Machine):
     def __init__(self, x, y, facing, center, velocity):
         Machine.__init__(self, x, y, facing, center, velocity)
-        pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+        pygame.sprite.Sprite.__init__(self)
 
         self.image, self.rect = media.load_image('shot.bmp', -1)
         self.hit_image = media.load_plain_image('hit.bmp', -1)
@@ -167,9 +167,6 @@ class Rocket(Machine):
         self.disappear_timer = 0
         self.active = 1
         self.update()
-
-        # TODO Make the shot launch from the edge of the firerer instead of this:
-        # Move the object once so it won't hit the object that shot it
 
     def explode(self):
       self.disappear_timer = 10
@@ -264,7 +261,6 @@ class Weapon(Machine):
     if self.clip.amount > 0:
       # Create a new shot and assign it the properties of the ship
       shot = global_state.globals.all_weapons[self.machinery.type](shooter.x, shooter.y, shooter.facing, shooter.rect.center, 40)
-      #global_state.globals.shot_sound.play()
       global_state.globals.all_sounds[self.machinery.type].play()
       self.shot_delay += self.machinery.loading_time
       self.clip.amount -= 1
@@ -281,7 +277,6 @@ class Ship(Machine):
     def __init__(self, engines, weapons):
         pygame.sprite.Sprite.__init__(self)
         # We say here that start in the middle of the playfield, direction 90, center, velocity
-        #Machine.__init__(self, global_state.globals.reso_x / 2, global_state.globals.reso_y / 2, 90, (global_state.globals.reso_x/2, global_state.globals.reso_y/2), 0)
         Machine.__init__(self, global_state.globals.reso_x / 2, global_state.globals.reso_y / 2, 90, (0,0), 0)
 
         self.image, self.rect = media.load_image('a90.bmp', -1)
@@ -292,8 +287,6 @@ class Ship(Machine):
         self.engines = engines
         self.weapons = weapons
 
-        # Define the files used by sprite(360 degrees)
-        # TODO Make this a function to be used by all other sprites too
         self.files = []
         for i in range(360):
           s = 'a' + str(i) + '.bmp'
@@ -320,7 +313,7 @@ class Ship(Machine):
         self.rect.center = global_state.globals.reso_x / 2, global_state.globals.reso_y / 2
         self.facing = 90
 
-        # Turn rate means how much the ship is turning left(negative value means
+        # Turn rate means how much the ship is turning left and negative value means
         # it's turning right
         self.turn_rate = 0
         self.turn_rate_accel = 2
@@ -348,7 +341,6 @@ class Ship(Machine):
         global_state.globals.ulx = self.x - (global_state.globals.reso_x / 2)
         global_state.globals.lrx = self.x + (global_state.globals.reso_x / 2)
         self.velocity = 0
-        #sys.exit(2)
 
       if self.y > global_state.globals.wholeLry:
         self.y = global_state.globals.wholeLry
@@ -370,7 +362,6 @@ class Ship(Machine):
       elif self.turn_rate < 0:
         self.turn_rate += 1
 
-      # TODO We shouldn't have to define this here
       if self.facing > 359 or self.facing < 1:
         self.facing = 0
 

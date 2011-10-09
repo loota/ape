@@ -22,7 +22,7 @@ class Machine(Body):
 class Terrain(Body):
   def __init__(self, image, x, y, elevation):
     Body.__init__(self)
-    pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+    pygame.sprite.Sprite.__init__(self)
     self.image, self.rect = media.load_image(image, -1)
     screen = pygame.display.get_surface()
     self.area = screen.get_rect()
@@ -44,7 +44,7 @@ class Terrain(Body):
 
 class CrossHairs(pygame.sprite.Sprite):
     def __init__(self,owner):
-      pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+      pygame.sprite.Sprite.__init__(self)
       self.image, self.rect = media.load_image('crosshairs.bmp', -1)
       screen = pygame.display.get_surface()
       self.area = screen.get_rect()
@@ -70,7 +70,7 @@ class Building(Machine):
       Machine.__init__(self, x, y, 0, 0, 0)
       pygame.sprite.Sprite.__init__(self) #call Sprite initializer
 
-      self.image, self.rect = media.load_image('pimp.bmp', -1)
+      self.image, self.rect = media.load_image('ground-battery.bmp', -1)
 
       screen = pygame.display.get_surface()
       self.area = screen.get_rect()

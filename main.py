@@ -374,11 +374,11 @@ class GameInitiator:
     return retval
 
   def randomizeEnemy(self):
-    random1 = random.randrange(100,global_state.globals.wholeLrx)
-    random2 = random.randrange(100,global_state.globals.wholeLry)
-    random3 = random.randrange(20, 25)
-    retval = (GroundBattery(random1, random2, random3))
-    return retval
+    x_position = random.randrange(100,global_state.globals.wholeLrx)
+    y_position = random.randrange(100,global_state.globals.wholeLry)
+    hit_points = random.randrange(20, 25)
+    ground_battery = (GroundBattery(x_position, y_position, hit_points))
+    return ground_battery
 
   def createForest(self, x, y):
     retval = (Terrain('forest.bmp', x, y, 1))

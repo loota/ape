@@ -635,29 +635,6 @@ def checkPotentialCollision(a, b):
     b_next_x = b.x
     b_next_y = b.y
 
-  #if JANAT_LEIKKAAVAT
-  #  print "HJI"
-  #  # Bodies are on a crash course. Simulate the positions the bodies are in and check if they do collide
-  #  a_simulated_x = a.x
-  #  a_simulated_y = a.y
-
-  #  b_simulated_x = b.x
-  #  b_simulated_y = b.y
-  #  # TODO Make a suitable terminating condition for the loop ("while not closing in on each other" for instance)
-  #  for i in range(10):
-  #    a_simulated_x += a_heading_x
-  #    a_simulated_y += a_heading_y
-
-  #    b_simulated_x += b_heading_x
-  #    b_simulated_y += b_heading_y
-
-  #    # TODO Clean this up.
-  #    a_simulated = pygame.Rect(a_simulated_x - a.rect.width/2, a_simulated_y - a.rect.height/2, a_simulated_y + a.rect.height/2, a_simulated_y + a.rect.height/2)
-  #    b_simulated = pygame.Rect(b_simulated_x - b.rect.width/2, b_simulated_y - b.rect.height/2, b_simulated_y + b.rect.height/2, b_simulated_y + b.rect.height/2)
-
-  #    if a_simulated.contains(b_simulated):
-  #      print "COLLISION"
-
 def checkCollision(a, b):
   # Right now everything is a square
 
@@ -986,28 +963,19 @@ screen.blit(background, (0, 0))
 pygame.display.flip()
 
 # Create ship and it's components
-# Rocket launcher
 machinery       = Machinery("Rocket", 10)
 barrel          = Barrel(5)
 clip            = Clip(2, 200)
 rocket_launcher = Weapon(machinery, barrel, clip)
 
-# Bomber
 machinery = Machinery("Bomb", 20)
 barrel    = Barrel(2)
 clip      = Clip(10, 4)
-bomber    = Weapon(machinery, barrel, clip)
+bomb_launcher    = Weapon(machinery, barrel, clip)
 
-weapons   = [rocket_launcher, bomber]
+weapons   = [rocket_launcher, bomb_launcher]
 engines   = [Engine(15, 1, 1), Engine(15, 1, 1)]
 ship      = Ship(engines, weapons)
-
-# Create terrains
-"""x = []
-for i in range(100):
-  x.append(randomizeTerrain())"""
-
-#terrain = tuple(x)
 
 gameInit = GameInitiator()
 
@@ -1043,12 +1011,10 @@ clock = pygame.time.Clock()
 if pygame.font:
     font = pygame.font.Font(None, 36)
     text = font.render("Ship hit points " + str(ship.hit_points) + " " + str(ship.weapons[0].machinery.type) + " ammo: " + str(ship.weapons[0].clip.amount) + " " + str(ship.weapons[1].machinery.type) + " ammo: " + str(ship.weapons[1].clip.amount), 1, (10, 10, 10))
-    #enemy_text = font.render("Enemy hit points " + str(ship.hit_points), 1, (10, 10, 10))
 
 textpos = text.get_rect(left=50)
-#enemy_textpos = enemy_text.get_rect(left=400)
 
-# This has no meaning now, it seems
+# TODO This has no meaning now, it seems
 pygame.key.set_repeat(50)
 
 # Game loop
@@ -1142,19 +1108,11 @@ while 1:
 
     background.blit(text, textpos)
 
-    # Draw enemy info
-    #background.fill(globals.bg_color, enemy_textpos)
-    #font = pygame.font.Font(None, 36)
-    #enemy_text = font.render("Enemy hit points " + str(battery.hit_points), 1, (10, 10, 10))
-    #background.blit(enemy_text, enemy_textpos)
-
     pygame.display.flip()
 
-#info_textpos = enemy_text.get_rect(top=400)
-#background.fill(globals.bg_color, info_textpos)
 font = pygame.font.Font(None, 108)
-info_text = font.render("You have been destroyed.", 1, (250, 0, 0))
-info_textpos = info_text.get_rect(top=400)
+info_text = font.render("Game over", 1, (250, 0, 0))
+info_textpos = info_text.get_rect(top=30, left=30)
 background.blit(info_text, info_textpos)
 pygame.display.flip()
 screen.blit(background, (0, 0))

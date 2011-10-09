@@ -6,9 +6,20 @@ needs to avoid the shots and destroy these sites.
 Forest terrain blocks shots but the player can fly over them. Mountains block
 shots and can't be flown over. 
 
-Requires pygame
+Dependencies
+============
+Requires python 2.6 and pygame
 
-Tested with python 2.6.7
+Usage
+=====
+
+Run the game with the command:
+python main.py
+
+If you need a different resolution, use the -r switch:
+python main.py -r 1400x1050
+
+(Tested with python 2.6.7)
 
 Controls
 ========

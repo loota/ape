@@ -456,28 +456,28 @@ bomb_launcher    = Weapon(machinery, barrel, clip)
 weapons   = [rocket_launcher, bomb_launcher]
 engines   = [Engine(15, 1, 1), Engine(15, 1, 1)]
 ship      = Ship(engines, weapons)
-global_state.globals.ship = ship
 
 gameInit = GameInitiator()
 
-x = []
+terrains = []
 for i in range(10):
   if random.randrange(1,3) == 1:
     next_terrain = 'createMountain'
   else:
     next_terrain = 'createForest'
 
-  x.append(gameInit.createTerrainGroup(next_terrain))
+  terrains.append(gameInit.createTerrainGroup(next_terrain))
 
 
-terrain = tuple(x)
+terrain = tuple(terrains)
 
-# Create enemies
-x = []
+enemies = []
 for i in range(3):
-  x.append(gameInit.randomizeEnemy())
+  ground_battery = gameInit.randomizeEnemy()
+  ground_battery.target = ship
+  enemies.append(ground_battery)
 
-batteries = tuple(x)
+batteries = tuple(enemies)
 
 crosshairs = CrossHairs(ship)
 misc_sprites = pygame.sprite.RenderPlain(crosshairs)

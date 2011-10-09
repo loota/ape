@@ -97,13 +97,14 @@ class GroundBattery(Building):
     self.dest_img = media.load_plain_image('explosion.bmp')
     self.facing = 90
     self.destroyed = False
+    self.target = False
 
   def update(self):
     if self.destroyed != True:
       self.checkStatus()
       
-      distance_x = global_state.globals.ship.x - self.x
-      distance_y = global_state.globals.ship.y - self.y
+      distance_x = self.target.x - self.x
+      distance_y = self.target.y - self.y
 
       # Tracking
       if distance_x < 0:

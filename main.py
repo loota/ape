@@ -9,7 +9,7 @@ def checkShotCollision(a, b):
 
   # a to the left of b
   if a.x < b.x:
-    # a above of b
+    # a above b
     if a.y < b.y:
       if a.rect.bottomright[0] > b.rect.topleft[0] and a.rect.bottomright[1] > b.rect.topleft[1]:
         if b.active > 0:
@@ -175,7 +175,6 @@ def checkCollision(a, b):
           a.y -= 10
 
 def bounceObject( obj, facing ):
-  # Change object's facing determined by facing
 
   turn_amount = obj.velocity * 3
 
@@ -215,7 +214,6 @@ def checkPlayerCollision(a, b):
           # a impacts from up left
           global_state.globals.crash_sound.play()
           if a.grounded == 0:
-            #a.velocity /= 2
             a.x -= impact
             a.y -= impact
             a.velocity = 0
@@ -239,7 +237,6 @@ def checkPlayerCollision(a, b):
             global_state.globals.ulx -= impact
             global_state.globals.uly -= impact
           else:
-            #a.velocity /= 2
             a.x -= impact
             a.y -= impact
             a.velocity = 0
@@ -255,7 +252,6 @@ def checkPlayerCollision(a, b):
           global_state.globals.crash_sound.play()
           # a impacts from down left
           if a.grounded == 0:
-            #a.velocity /= 2
             a.x -= impact
             a.y += impact
             a.velocity = 0
@@ -293,7 +289,6 @@ def checkPlayerCollision(a, b):
           global_state.globals.crash_sound.play()
           # a impacts from bottom right
           if a.grounded == 0:
-            #a.velocity /= 2
             a.x += impact
             a.y += impact
             a.velocity = 0
@@ -314,7 +309,6 @@ def checkPlayerCollision(a, b):
             global_state.globals.ulx += impact
             global_state.globals.uly += impact
           else:
-            #a.velocity /= 2
             a.x += impact
             a.y += impact
             a.velocity = 0
@@ -330,7 +324,6 @@ def checkPlayerCollision(a, b):
           global_state.globals.crash_sound.play()
           # a impacts from up right
           if a.grounded == 0:
-            #a.velocity /= 2
             a.x += impact
             a.y -= impact
             a.velocity = 0
@@ -362,16 +355,68 @@ def checkPlayerCollision(a, b):
             global_state.globals.ulx += impact
             global_state.globals.uly -= impact
 
-# TODO Move these into one function
 class GameInitiator:
-  def randomizeTerrain(self):
-    random1 = random.randrange(100,global_state.globals.wholeLrx)
-    random2 = random.randrange(100,global_state.globals.wholeLry)
-    if random1 % 2 > 0:
-      retval = (Terrain('forest.bmp', random1, random2, 1))
-    else:
-      retval = (Terrain('mountain.bmp', random1, random2, 3))
-    return retval
+  def createTerrains(self):
+    terrains = []
+    for i in range(10):
+      terrains.append(self.createTerrainGroup())
+    return tuple(terrains)
+
+  def createForest(self, x, y):
+    forest = (Terrain('forest.bmp', x, y, 1))
+    return forest
+
+  def createMountain(self,x, y):
+    mountain = (Terrain('mountain.bmp', x, y, 3))
+    return mountain
+
+  def createTerrainGroup(self):
+    xPosition = random.randrange(100,global_state.globals.wholeLrx)
+    yPosition = random.randrange(100,global_state.globals.wholeLry)
+    numberOfTiles = random.randrange(1,20)
+    createdTerrains = []
+    current_x = xPosition
+    current_y = yPosition
+    randomNumber = random.randrange(1,3)
+    for i in range(numberOfTiles):
+      if randomNumber == 1:
+        nextTerrain = self.createMountain(current_x, current_y)
+      else:
+        nextTerrain = self.createForest(current_x, current_y)
+
+      createdTerrains.append(nextTerrain)
+      current_x += 50
+      if random.randrange(1,5) % 5 == 1:
+        current_y += 50
+        if random.randrange(1,2) == 2:
+          current_x = xPosition
+        else:
+          current_x = yPosition + random.randrange(50,100)
+    return createdTerrains
+
+  def createShip(self):
+    machinery       = Machinery("Rocket", 10)
+    barrel          = Barrel(5)
+    clip            = Clip(2, 200)
+    rocket_launcher = Weapon(machinery, barrel, clip)
+
+    machinery     = Machinery("Bomb", 20)
+    barrel        = Barrel(2)
+    clip          = Clip(10, 4)
+    bomb_launcher = Weapon(machinery, barrel, clip)
+
+    weapons   = [rocket_launcher, bomb_launcher]
+    engines   = [Engine(15, 1, 1), Engine(15, 1, 1)]
+    ship      = Ship(engines, weapons)
+    return ship
+
+  def createEnemies(self, ship):
+    enemies = []
+    for i in range(3):
+      ground_battery = self.randomizeEnemy()
+      ground_battery.target = ship
+      enemies.append(ground_battery)
+    return tuple(enemies)
 
   def randomizeEnemy(self):
     x_position = random.randrange(100,global_state.globals.wholeLrx)
@@ -380,104 +425,94 @@ class GameInitiator:
     ground_battery = (GroundBattery(x_position, y_position, hit_points))
     return ground_battery
 
-  def createForest(self, x, y):
-    retval = (Terrain('forest.bmp', x, y, 1))
-    return retval
+class GraphicsRunner:
+  def initDisplay(self):
+    self.screen = pygame.display.set_mode((global_state.globals.reso_x, global_state.globals.reso_y))
+    pygame.display.set_caption('Ape')
+    pygame.mouse.set_visible(0)
 
-  def createMountain(self,x, y):
-    retval = (Terrain('mountain.bmp', x, y, 3))
-    return retval
+    self.background = pygame.Surface(self.screen.get_size())
+    self.background = self.background.convert()
+    self.background.fill(global_state.globals.bg_color)
 
-  def createTerrainGroup(self, terrainFunction):
-    random1 = random.randrange(100,global_state.globals.wholeLrx)
-    random2 = random.randrange(100,global_state.globals.wholeLry)
-    random3 = random.randrange(1,20)
-    current_x = random1
-    current_y = random2
-    createdTerrains = []
-    print current_x, current_y
-    func = getattr(GameInitiator, terrainFunction)
-
-    for i in range(random3):
-      createdTerrains.append(func(self, current_x, current_y))
-      current_x += 50
-      if random.randrange(1,5) % 5 == 1:
-        current_y += 50
-        if random.randrange(1,2) == 2:
-          current_x = random1
-        else:
-          current_x = random1 + random.randrange(50,100)
-
-    return createdTerrains
-
-def end_game(text):
-    font = pygame.font.Font(None, 108)
-    info_text = font.render("Game over" + text , 1, (250, 0, 0))
-    info_textpos = info_text.get_rect(top=30, left=30)
-    background.blit(info_text, info_textpos)
+    self.screen.blit(self.background, (0, 0))
     pygame.display.flip()
-    screen.blit(background, (0, 0))
 
-def checkWinCondition():
-    intact_battery_found = False
-    for battery in batteries:
-        if battery.destroyed == False:
-            intact_battery_found = True
+  def drawObjects(self):
+    self.screen.blit(self.background, (0, 0))
+    moving_objects.draw(self.screen)
+    shipsprites.draw(self.screen)
+    misc_sprites.draw(self.screen)
+    terrain_sprites.draw(self.screen)
+    global_state.globals.allshots.draw(self.screen)
+    
+    self.background.fill(global_state.globals.bg_color, textpos)
+    font = pygame.font.Font(None, 36)
+    text = font.render("Ship hit points " + str(ship.hit_points) + " " + str(ship.weapons[0].machinery.type) + " ammo: " + str(ship.weapons[0].clip.amount) + " " + str(ship.weapons[1].machinery.type) + " ammo: " + str(ship.weapons[1].clip.amount), 1, (10, 10, 10))
 
-    if intact_battery_found == False:
-        return True
-    else:
-        return False
+    self.background.blit(text, textpos)
+    pygame.display.flip()
 
+class GameRunner:
+    def endGame(self, text):
+        font = pygame.font.Font(None, 108)
+        info_text = font.render("Game over" + text , 1, (250, 0, 0))
+        info_textpos = info_text.get_rect(top=30, left=30)
+        graphicsRunner.background.blit(info_text, info_textpos)
+        pygame.display.flip()
+        graphicsRunner.screen.blit(graphicsRunner.background, (0, 0))
+
+    def checkWinCondition(self):
+        intact_battery_found = False
+        for battery in batteries:
+            if battery.destroyed == False:
+                intact_battery_found = True
+
+        if intact_battery_found == False:
+            return True
+        else:
+            return False
+
+    def handleKeyEvents(self):
+        pressed = pygame.key.get_pressed()
+        if pressed[K_ESCAPE] == 1:
+          sys.exit(2)
+        if pressed[K_a] == 1:
+          ship.turn('l')
+        if pressed[K_d] == 1:
+          ship.turn('r')
+        if pressed[K_w] == 1:
+          ship.accel(ship.acceleration)
+        if pressed[K_s] == 1:
+          ship.brake(ship.brakage)
+        if pressed[K_h] == 1:
+          if ship.weapons[0].shot_delay == 0:
+            shot = ship.weapons[0].shoot(ship)
+            if shot:
+              global_state.globals.allshots.add(shot)
+        if pressed[K_j] == 1:
+          if ship.weapons[1].shot_delay == 0:
+            shot = ship.weapons[1].shoot(ship)
+            if shot:
+              global_state.globals.allshots.add(shot)
+
+        if pressed[K_q] == 1:
+          ship.hit_points = 1
+
+        for event in pygame.event.get():
+          if event.type == QUIT:
+              sys.exit(2)
 
 # Main portion begins
-screen = pygame.display.set_mode((global_state.globals.reso_x, global_state.globals.reso_y))
-pygame.display.set_caption('Ape')
-pygame.mouse.set_visible(0)
-
-background = pygame.Surface(screen.get_size())
-background = background.convert()
-background.fill(global_state.globals.bg_color)
-
-screen.blit(background, (0, 0))
-pygame.display.flip()
-
-# Create ship and it's components
-machinery       = Machinery("Rocket", 10)
-barrel          = Barrel(5)
-clip            = Clip(2, 200)
-rocket_launcher = Weapon(machinery, barrel, clip)
-
-machinery = Machinery("Bomb", 20)
-barrel    = Barrel(2)
-clip      = Clip(10, 4)
-bomb_launcher    = Weapon(machinery, barrel, clip)
-
-weapons   = [rocket_launcher, bomb_launcher]
-engines   = [Engine(15, 1, 1), Engine(15, 1, 1)]
-ship      = Ship(engines, weapons)
-
 gameInit = GameInitiator()
+graphicsRunner = GraphicsRunner()
+graphicsRunner.initDisplay()
 
-terrains = []
-for i in range(10):
-  if random.randrange(1,3) == 1:
-    next_terrain = 'createMountain'
-  else:
-    next_terrain = 'createForest'
+ship = gameInit.createShip()
 
-  terrains.append(gameInit.createTerrainGroup(next_terrain))
+terrain = gameInit.createTerrains()
 
-
-terrain = tuple(terrains)
-
-enemies = []
-for i in range(3):
-  ground_battery = gameInit.randomizeEnemy()
-  ground_battery.target = ship
-  enemies.append(ground_battery)
-
-batteries = tuple(enemies)
+batteries = gameInit.createEnemies(ship)
 
 crosshairs = CrossHairs(ship)
 misc_sprites = pygame.sprite.RenderPlain(crosshairs)
@@ -498,38 +533,12 @@ textpos = text.get_rect(left=50)
 # TODO This has no meaning now, it seems
 pygame.key.set_repeat(50)
 
+gameRunner = GameRunner()
 # Game loop
 while 1:
-    clock.tick(40)
+    clock.tick(30)
 
-    pressed = pygame.key.get_pressed()
-    if pressed[K_ESCAPE] == 1:
-      sys.exit(2)
-    if pressed[K_a] == 1:
-      ship.turn('l')
-    if pressed[K_d] == 1:
-      ship.turn('r')
-    if pressed[K_w] == 1:
-      ship.accel(ship.acceleration)
-    if pressed[K_s] == 1:
-      ship.brake(ship.brakage)
-    if pressed[K_h] == 1:
-      if ship.weapons[0].shot_delay == 0:
-        shot = ship.weapons[0].shoot(ship)
-        if shot:
-          global_state.globals.allshots.add(shot)
-    if pressed[K_j] == 1:
-      if ship.weapons[1].shot_delay == 0:
-        shot = ship.weapons[1].shoot(ship)
-        if shot:
-          global_state.globals.allshots.add(shot)
-
-    if pressed[K_q] == 1:
-      ship.hit_points = 1
-
-    for event in pygame.event.get():
-      if event.type == QUIT:
-          sys.exit(2)
+    gameRunner.handleKeyEvents()
 
     # Check if there are objects inside the visible screen
     for battery in batteries:
@@ -564,11 +573,11 @@ while 1:
         checkPotentialCollision(a_shot,object)
 
     if ship.checkStatus() == -1:
-        end_game('. You lost')
+        endGame('. You lost')
         break
 
-    if checkWinCondition():
-        end_game('. You won!')
+    if gameRunner.checkWinCondition():
+        gameRunner.endGame('. You won!')
         break
 
     moving_objects.update()
@@ -576,22 +585,8 @@ while 1:
     shipsprites.update()
     terrain_sprites.update()
     global_state.globals.allshots.update()
-
-    screen.blit(background, (0, 0))
-    moving_objects.draw(screen)
-    shipsprites.draw(screen)
-    misc_sprites.draw(screen)
-    terrain_sprites.draw(screen)
-    global_state.globals.allshots.draw(screen)
+    graphicsRunner.drawObjects()
     
-    # Draw ship info
-    background.fill(global_state.globals.bg_color, textpos)
-    font = pygame.font.Font(None, 36)
-
-    text = font.render("Ship hit points " + str(ship.hit_points) + " " + str(ship.weapons[0].machinery.type) + " ammo: " + str(ship.weapons[0].clip.amount) + " " + str(ship.weapons[1].machinery.type) + " ammo: " + str(ship.weapons[1].clip.amount), 1, (10, 10, 10))
-
-    background.blit(text, textpos)
-    pygame.display.flip()
 
 pygame.display.flip()
 # End game

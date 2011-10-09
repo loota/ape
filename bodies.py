@@ -222,7 +222,7 @@ class Engine(Machine):
   def __init__(self, thrust, acceleration, brakage):
     Machine.__init__(self, 0, 0, 0, 0, 0)
     self.image = media.load_plain_image('missile.bmp', -1)
-    pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+    pygame.sprite.Sprite.__init__(self)
     self.thrust = thrust
     self.acceleration = acceleration
     self.brakage = brakage
@@ -231,7 +231,7 @@ class Machinery(Machine):
   def __init__(self, type, loading_time):
     Machine.__init__(self, 0, 0, 0, 0, 0)
     self.image = media.load_plain_image('missile.bmp', -1)
-    pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+    pygame.sprite.Sprite.__init__(self)
     self.type         = type
     self.loading_time = loading_time
 
@@ -239,14 +239,14 @@ class Barrel(Machine):
   def __init__(self, length):
     Machine.__init__(self, 0, 0, 0, 0, 0)
     self.image = media.load_plain_image('missile.bmp', -1)
-    pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+    pygame.sprite.Sprite.__init__(self)
     self.length = length
 
 class Clip(Machine):
   def __init__(self, space, amount):
     Machine.__init__(self, 0, 0, 0, 0, 0)
     self.image = media.load_plain_image('missile.bmp', -1)
-    pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+    pygame.sprite.Sprite.__init__(self)
     self.space  = space
     self.amount = amount
 
@@ -254,7 +254,7 @@ class Weapon(Machine):
   def __init__(self, machinery, barrel, clip):
     Machine.__init__(self, 0, 0, 0, 0, 0)
     self.image = media.load_plain_image('missile.bmp', -1)
-    pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+    pygame.sprite.Sprite.__init__(self)
     self.machinery = machinery
     self.barrel    = barrel
     self.clip      = clip
@@ -279,7 +279,7 @@ class Weapon(Machine):
 
 class Ship(Machine):
     def __init__(self, engines, weapons):
-        pygame.sprite.Sprite.__init__(self) #call Sprite initializer
+        pygame.sprite.Sprite.__init__(self)
         # We say here that start in the middle of the playfield, direction 90, center, velocity
         #Machine.__init__(self, global_state.globals.reso_x / 2, global_state.globals.reso_y / 2, 90, (global_state.globals.reso_x/2, global_state.globals.reso_y/2), 0)
         Machine.__init__(self, global_state.globals.reso_x / 2, global_state.globals.reso_y / 2, 90, (0,0), 0)
@@ -398,11 +398,11 @@ class Ship(Machine):
 
       self.image = self.img[self.facing]
 
-    def accel(self,velocity):
+    def accel(self, velocity):
       if self.velocity < self.max_speed:
-        self.velocity += velocity
+        self.velocity += velocity / 2
 
-    def brake(self,velocity):
+    def brake(self, velocity):
       if self.velocity > -10:
         self.velocity -= velocity
 

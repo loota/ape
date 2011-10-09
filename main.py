@@ -1,4 +1,5 @@
 import time
+import sys
 import global_state
 from pygame.locals import *
 from bodies import *
@@ -409,6 +410,26 @@ class GameInitiator:
 
     return createdTerrains
 
+def end_game(text):
+    font = pygame.font.Font(None, 108)
+    info_text = font.render("Game over" + text , 1, (250, 0, 0))
+    info_textpos = info_text.get_rect(top=30, left=30)
+    background.blit(info_text, info_textpos)
+    pygame.display.flip()
+    screen.blit(background, (0, 0))
+
+def checkWinCondition():
+    intact_battery_found = False
+    for battery in batteries:
+        if battery.destroyed == False:
+            intact_battery_found = True
+
+    if intact_battery_found == False:
+        return True
+    else:
+        return False
+
+
 # Main portion begins
 screen = pygame.display.set_mode((global_state.globals.reso_x, global_state.globals.reso_y))
 pygame.display.set_caption('Ape')
@@ -543,7 +564,12 @@ while 1:
         checkPotentialCollision(a_shot,object)
 
     if ship.checkStatus() == -1:
-      break
+        end_game('. You lost')
+        break
+
+    if checkWinCondition():
+        end_game('. You won!')
+        break
 
     moving_objects.update()
     misc_sprites.update()
@@ -565,15 +591,7 @@ while 1:
     text = font.render("Ship hit points " + str(ship.hit_points) + " " + str(ship.weapons[0].machinery.type) + " ammo: " + str(ship.weapons[0].clip.amount) + " " + str(ship.weapons[1].machinery.type) + " ammo: " + str(ship.weapons[1].clip.amount), 1, (10, 10, 10))
 
     background.blit(text, textpos)
-
     pygame.display.flip()
-
-font = pygame.font.Font(None, 108)
-info_text = font.render("Game over", 1, (250, 0, 0))
-info_textpos = info_text.get_rect(top=30, left=30)
-background.blit(info_text, info_textpos)
-pygame.display.flip()
-screen.blit(background, (0, 0))
 
 pygame.display.flip()
 # End game

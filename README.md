@@ -1,10 +1,8 @@
 2D shoot'em up game.
 
-There are three immovable enemy sites down that try to shoot the player. The player
-needs to avoid the shots and destroy these sites.
+There are three immovable enemy sites that try to shoot the player. The player needs to avoid the fire coming from them and destroy these sites.
 
-Forest terrain blocks shots but the player can fly over them. Mountains block
-shots and can't be flown over. 
+Forest terrain blocks shots but the player can fly over them. Mountains block shots and can't be flown over. 
 
 Dependencies
 ============
@@ -31,4 +29,6 @@ s - decrease speed
 
 h - shoot rocket (ammunition: 200)
 j - launch a bomb (ammunition: 4)
+
+Esc - quit game
 </pre>

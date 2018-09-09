@@ -4,7 +4,6 @@ import media
 import getopt
 class Globals:
   def __init__(self):
-
     self.reso_x           = 1400
     self.reso_y           = 1050
     self.shot_sound       = media.load_sound("colt45.wav")
